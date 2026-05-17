@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id         String      @id @default(cuid())
+  name       String
+  role       String      // "Employee", "Manager (L1)", "Admin"
+  goalSheets GoalSheet[]
+}
+
+model GoalSheet {
+  id         String   @id @default(cuid())
+  cycle      String   // e.g., "Q1 2024"
+  status     String   @default("Draft") // "Draft", "Submitted", "Approved"
+  
+  employeeId String
+  employee   User     @relation(fields: [employeeId], references: [id])
+  
+  goals      Goal[]
+  auditLogs  AuditLog[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AuditLog {
+  id              String    @id @default(cuid())
+  action          String
+  performedByRole String
+  performedByName String
+  
+  targetSheetId   String
+  targetSheet     GoalSheet @relation(fields: [targetSheetId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime  @default(now())
+}
+
+model Goal {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  thrustArea        String
+  unitOfMeasurement String    // "Numeric", "%", "Timeline", "Zero-based"
+  trackingType      String?   // "Min (Higher is better)" or "Max (Lower is better)"
+  target            String    // Stored as string to hold both Floats and ISO Dates
+  weightage         Int       // percentage
+  
+  goalSheetId       String
+  goalSheet         GoalSheet @relation(fields: [goalSheetId], references: [id])
+  
+  sharedKpiId       String?
+  sharedKpi         SharedKPI? @relation(fields: [sharedKpiId], references: [id])
+
+  checkIns          CheckIn[]
+}
+
+model CheckIn {
+  id                String    @id @default(cuid())
+  quarter           String    // e.g., "Q1", "Q2"
+  actualAchievement String    // Stored as string to hold Floats or ISO Dates
+  status            String    // "Not Started", "On Track", "Completed"
+  managerComment    String?
+  
+  goalId            String
+  goal              Goal      @relation(fields: [goalId], references: [id])
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model SharedKPI {
+  id           String   @id @default(cuid())
+  title        String
+  thrustArea   String
+  target       String
+  uom          String
+  trackingType String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  goals        Goal[]
+}
+
