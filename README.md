@@ -15,7 +15,7 @@ A full-stack, enterprise-grade goal management application built to align compan
 * **Database:** Prisma ORM, SQLite
 
 ## 🛠️ How to Run Locally for Judging
-1. Clone the repository: `git clone `
+1. Clone the repository: `git clone [YOUR_REPO_URL]`
 2. Install dependencies: `npm install`
 3. Push the database schema: `npx prisma db push`
 4. Start the development server: `npm run dev`
