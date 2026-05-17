@@ -308,8 +308,8 @@ function ManagerView() {
   );
 }
 
-import { getAdminDashboardData, unlockGoalSheet, getSystemAuditLogs, createSharedKPI, getSharedKPIs, toggleSharedKPIStatus } from "@/actions/admin";
-import { Download, Unlock, Clock, Power } from "lucide-react";
+import { getAdminDashboardData, unlockGoalSheet, getSystemAuditLogs, createSharedKPI, getSharedKPIs, toggleSharedKPIStatus, resetDemoData } from "@/actions/admin";
+import { Download, Unlock, Clock, Power, RefreshCw } from "lucide-react";
 
 function AdminView() {
   const [dashboardData, setDashboardData] = useState<any[]>([]);
@@ -420,14 +420,44 @@ function AdminView() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-slate-800">Governance & Reporting</h2>
-        <a 
-          href="/api/export-achievements"
-          download="achievement_report.csv"
-          className="flex items-center px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors shadow-lg shadow-indigo-200"
-        >
-          <Download className="h-4 w-4 mr-2" />
-          Export Achievement Report (CSV)
-        </a>
+        <div className="flex space-x-4">
+          <button 
+            onClick={() => {
+              toast("Are you sure you want to wipe all demo data?", {
+                description: "Shared KPIs will remain. This action cannot be undone.",
+                action: {
+                  label: "Yes, Wipe Data",
+                  onClick: async () => {
+                    const toastId = toast.loading("Resetting demo data...");
+                    const result = await resetDemoData();
+                    if (result.success) {
+                      toast.success("Demo data reset successfully!", { id: toastId });
+                      fetchData();
+                    } else {
+                      toast.error("Failed to reset data", { id: toastId });
+                    }
+                  }
+                },
+                cancel: {
+                  label: "Cancel",
+                  onClick: () => {}
+                }
+              });
+            }}
+            className="flex items-center px-4 py-2.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-medium transition-colors border border-red-200"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Factory Reset Demo
+          </button>
+          <a 
+            href="/api/export-achievements"
+            download="achievement_report.csv"
+            className="flex items-center px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors shadow-lg shadow-indigo-200"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export Achievement Report (CSV)
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

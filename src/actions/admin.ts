@@ -148,3 +148,18 @@ export async function toggleSharedKPIStatus(id: string, isActive: boolean) {
     return { success: false, error: "Failed to toggle KPI status" };
   }
 }
+
+export async function resetDemoData() {
+  try {
+    await prisma.checkIn.deleteMany();
+    await prisma.goal.deleteMany();
+    await prisma.auditLog.deleteMany();
+    await prisma.goalSheet.deleteMany();
+    
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to reset demo data:", error);
+    return { success: false, error: "Failed to reset demo data" };
+  }
+}
