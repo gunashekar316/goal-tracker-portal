@@ -2,7 +2,7 @@
 
 A full-stack, enterprise-grade goal management application built to align company-wide KPIs with individual employee performance. 
 
-## 🚀 Features & "Must-Haves" Completed
+## 🚀 Features
 * **Role-Based Access (Mock Auth):** Distinct dashboards and permissions for Employees, Managers, and Admins.
 * **Dynamic UoM Math Engine:** Automatically calculates progress scores based on diverse Units of Measurement (Numeric limits, Percentages, and Date/Timeline calculations).
 * **Shared Company KPIs:** Admins can set global "North Star" metrics that employees can seamlessly import into their personal goal sheets.
@@ -14,7 +14,7 @@ A full-stack, enterprise-grade goal management application built to align compan
 * **Backend:** Next.js Server Actions, Zod (Data Validation)
 * **Database:** Prisma ORM, SQLite
 
-## 🛠️ How to Run Locally for Judging
+## 🛠️ How to Run Locally
 1. Clone the repository: `git clone https://github.com/gunashekar316/goal-tracker-portal.git`
 2. Install dependencies: `npm install`
 3. Push the database schema: `npx prisma db push`
